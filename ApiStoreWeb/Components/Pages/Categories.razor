@@ -1,0 +1,58 @@
+﻿@page "/Category"
+@using ApiStoreWeb.DTOs
+@using ApiStoreWeb.Services
+
+@inject CategoryServices categoryService
+
+@code {
+    private List<CategoryResponse> categories;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            categories = await categoryService.GetCategories();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+}
+
+<h3>Lista de Categorias</h3>
+
+@if (categories == null)
+{
+    <p><em>CARGANDO...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categories)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Nombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+} 
