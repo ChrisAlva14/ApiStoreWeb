@@ -12,7 +12,11 @@ builder.Services.AddScoped(o => new HttpClient
 });
 
 builder.Services.AddScoped<AuthServices>();
+<<<<<<< HEAD
 builder.Services.AddScoped<CategoryServices>();
+=======
+builder.Services.AddScoped<OrderDetailService>();
+>>>>>>> 43218fd (actualizacion de orderdetail razor)
 
 var app = builder.Build();
 
