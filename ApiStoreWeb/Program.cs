@@ -12,7 +12,11 @@ builder.Services.AddScoped(o => new HttpClient
 });
 
 builder.Services.AddScoped<AuthServices>();
+
 builder.Services.AddScoped<CategoryServices>();
+
+builder.Services.AddScoped<OrderDetailService>();
+
 
 var app = builder.Build();
 
