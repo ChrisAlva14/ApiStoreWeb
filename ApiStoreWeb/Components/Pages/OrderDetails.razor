@@ -1,0 +1,62 @@
+﻿@page "/OrderDetails"
+@using ApiStoreWeb.DTOs
+@using ApiStoreWeb.Services
+
+<h3>Lista de Detalle de Ordenes</h3>
+
+@if (orderDetails == null)
+{
+    <p><em>Cargando...</em></p>
+}else{
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Codigo de Orden</th>
+            <th>Codigo de Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderDetail in orderDetails)
+        {
+            <tr>
+                <td>@orderDetail.Id</td>
+                <td>@orderDetail.OrderId</td>
+                <td>@orderDetail.ProductId</td>
+                <td>@orderDetail.Cantidad</td>
+                <td>@orderDetail.Precio</td>
+               
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@inject OrderDetailService orderDetailService
+@code {
+    private List<OrderDetailResponse> orderDetails;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            orderDetails = await orderDetailService.GetOrderDetails();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+    }
+
+}
