@@ -17,7 +17,6 @@
 
         public string? Imagen { get; set; }
 
-        public virtual CategoryResponse Categoria { get; set; } = null!;
     }
 
 

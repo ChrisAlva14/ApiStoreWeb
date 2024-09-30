@@ -6,7 +6,6 @@ namespace ApiStoreWeb.Services
     {
         private readonly HttpClient _httpClient;
         private readonly AuthServices _authServices;
-        private string? token;
 
         public ProductService(HttpClient httpClient, AuthServices authServices)
         {
@@ -17,7 +16,7 @@ namespace ApiStoreWeb.Services
         {
             try
             {
-                var toke = await _authServices.GetToken();
+                var token = await _authServices.GetToken();
                 if (string.IsNullOrEmpty(token))
                 {
                     throw new InvalidOperationException("El token es nulo o invalido.Iniciar sesion");

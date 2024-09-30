@@ -1,57 +1,69 @@
-﻿@page "/products"
+﻿@page "/Products"
 @using ApiStoreWeb.DTOs
 @using ApiStoreWeb.Services
 
-<h3> List of Products</h3>
+@inject ProductService productService
+
+@code {
+    private List<ProductResponse> products;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            products = await productService.GetProducts();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+}
+
+<h3> Lista de Productos</h3>
+
 @if (products == null)
 {
     <p><em>Loading...</em></p>
 }
-else
-{
-
-
-<table class="table">
+else{
+    <table class="table">
     <thead>
         <tr>
+            <th>Codigo</th>
             <th>Nombre</th>
-            <th>Precio (C)</th>
-           
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Codigo Categoria</th>
+            <th>Stock</th>
+            <th>Imagen</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var product in products)
         {
             <tr>
+                <td>@product.Id</td>
                 <td>@product.Nombre</td>
+                <td>@product.Descripcion</td>
                 <td>@product.Precio</td>
+                <td>@product.CategoriaId</td>
+                <td>@product.Stock</td>
+                <td>@product.Imagen</td>
                 
             </tr>
         }
     </tbody>
 </table>
 }
-@if (string.IsNullOrEmpty(errorMessage))
+
+@if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">@errorMessage</div>
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
 }
 
-@inject ProductService productService
-@code {
-    private List<ProductResponse> products;
-    private string errorMessage;
 
-   protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            products = await productService.GetProducts();
-        }
-        catch (Exception ex )
-        {
-            errorMessage = ex.Message;
-
-        }
-    }
-
-}
