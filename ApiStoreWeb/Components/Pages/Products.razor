@@ -1,0 +1,57 @@
+﻿@page "/products"
+@using ApiStoreWeb.DTOs
+@using ApiStoreWeb.Services
+
+<h3> List of Products</h3>
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio (C)</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in products)
+        {
+            <tr>
+                <td>@product.Nombre</td>
+                <td>@product.Precio</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+}
+@if (string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@inject ProductService productService
+@code {
+    private List<ProductResponse> products;
+    private string errorMessage;
+
+   protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            products = await productService.GetProducts();
+        }
+        catch (Exception ex )
+        {
+            errorMessage = ex.Message;
+
+        }
+    }
+
+}
