@@ -1,7 +1,69 @@
 ﻿@page "/"
+@using ApiStoreWeb.DTOs
+@using ApiStoreWeb.Services;
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Login</PageTitle>
 
-<h1>Hello, world!</h1>
+<EditForm Model="userSession" OnValidSubmit="Login">
+    <div class="mb-3">
+        <label class="form-label">Nombre Usuario:</label>
+        <InputText class="form-control" @bind-Value="userSession.Username" />
+    </div>
 
-Welcome to your new app.
+    <div class="mb-3">
+        <label class="form-label">Contraseña:</label>
+        <InputText class="form-control" type="password" @bind-Value="userSession.Userpassword" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">
+            @errorMessage
+        </div>
+    }
+</EditForm>
+
+@inject AuthServices authServices
+@inject NavigationManager navigationManager
+
+@code{
+    private UserSession userSession = new UserSession();
+    private string errorMessage;
+
+    private bool isAuthenticated;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isAuthenticated = await authServices.IsAuthenticated();
+
+            if (isAuthenticated)
+            {
+                navigationManager.NavigateTo("/counter");
+            }
+            else
+            {
+                navigationManager.NavigateTo("/");
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Login(){
+        var token = await authServices.Login(userSession);
+
+        if (string.IsNullOrEmpty(token))
+        {
+            errorMessage = "CREDENCIALES INCORRECTAS";
+
+            return;
+        }
+
+        await authServices.SetToken(token);
+        navigationManager.NavigateTo("/weather", true);
+    }
+}

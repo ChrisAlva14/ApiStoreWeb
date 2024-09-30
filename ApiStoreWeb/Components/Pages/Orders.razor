@@ -1,0 +1,66 @@
+﻿@page "/Orders"
+@using ApiStoreWeb.DTOs
+@using ApiStoreWeb.Services
+
+@inject OrderServices orderServices
+
+@code {
+    private List<OrderResponse> orders;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            orders = await orderServices.GetOrders();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+    }
+
+}
+
+<h3>Lista de Ordenes</h3>
+
+@if (orders == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Fecha Pedido</th>
+                <th>Estado Pedido</th>
+                <th>Codigo de Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.FechaPedido</td>
+                    <td>@order.EstadoPedido</td>
+                    <td>@order.UserId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+
+
